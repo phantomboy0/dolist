@@ -1,0 +1,10 @@
+[package]
+name = "dolist"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+clap = "4.5.35"
+tabled = { version = "0.18.0", features = ["ansi"] }
+rusqlite = { version = "0.34.0", features = ["bundled"] }
+colored = "3.0.0"
