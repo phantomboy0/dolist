@@ -2,7 +2,7 @@ mod repository;
 use repository::database::Db;
 use clap::{value_parser, Arg, ArgAction, Command};
 use colored::Colorize;
-use tabled::{ Table};
+use tabled::{Table};
 use tabled::settings::{Color, Style};
 use tabled::settings::object::Rows;
 use tabled::settings::themes::Colorization;
@@ -156,10 +156,7 @@ fn main() {
 }
 
 fn create_new_item(name: &str, description: &str) {
-    let app = match Db::new() {
-        Ok(db) => db,
-        Err(_) =>  panic!("Can't connect to the database.")
-    };
+    let app = get_db();
 
     app.add_item(name, description).expect("Couldn't add the item");
     println!("\n{}", "Added the new item to todo list".green());
@@ -177,10 +174,7 @@ fn show_list_items(page: &u32, limit: &u32, show_all: bool) {
         return;
     }
 
-    let app = match Db::new() {
-        Ok(db) => db,
-        Err(_) =>  panic!("Can't connect to the database.")
-    };
+    let app = get_db();
 
     let items = if show_all { app.show_all_items() } else { app.show_items(page,limit) };
 
@@ -216,10 +210,7 @@ fn show_list_items(page: &u32, limit: &u32, show_all: bool) {
 }
 
 fn set_item_status(id: &u32,status: &bool) {
-    let app = match Db::new() {
-        Ok(db) => db,
-        Err(_) =>  panic!("Can't connect to the database.")
-    };
+    let app = get_db();
     let effected_rows =  app.set_item_status(id,status).unwrap_or(0);
 
     if effected_rows == 0 {
@@ -231,10 +222,7 @@ fn set_item_status(id: &u32,status: &bool) {
 }
 
 fn delete_item(id: &u32) {
-    let app = match Db::new() {
-        Ok(db) => db,
-        Err(_) =>  panic!("Can't connect to the database.")
-    };
+    let app = get_db();
     let effected_rows =  app.delete_item(id).unwrap_or(0);
 
     if effected_rows == 0 {
@@ -246,10 +234,7 @@ fn delete_item(id: &u32) {
 }
 
 fn edit_item(id: &u32,name: &str, description: &str) {
-    let app = match Db::new() {
-        Ok(db) => db,
-        Err(_) =>  panic!("Can't connect to the database.")
-    };
+    let app = get_db();
     let effected_rows =  app.edit_item(id,name,description).unwrap_or(0);
 
     if effected_rows == 0 {
@@ -258,4 +243,11 @@ fn edit_item(id: &u32,name: &str, description: &str) {
     }
 
     println!("Item With id of {} got {}",id.to_string().bright_blue(),"Edited".bright_purple());
+}
+
+fn get_db() -> Db {
+    match Db::new() {
+        Ok(db) => db,
+        Err(_) => panic!("Can't connect to the database.")
+    }
 }

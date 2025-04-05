@@ -49,9 +49,9 @@ impl Db {
         Ok(())
   }
 
-  pub fn show_items(&self,page: &u32, limit: &u32) -> Result<Vec<TodoItem>,rusqlite::Error> {
+  pub fn show_items(&self,page: &u32, limit: &u32) -> Result<Vec<TodoItem>,rusqlite::Error> { 
       let offset = (page - 1) * limit;
-     let mut stmt = self.conn.prepare("SELECT * FROM dolist ORDER BY id DESC Limit :limit OFFSET :offset")?;
+      let mut stmt = self.conn.prepare("SELECT * FROM dolist ORDER BY id DESC Limit :limit OFFSET :offset")?;
       let result = stmt.query_map(params![limit, offset], |row| {
           Ok(TodoItem {
               ID: row.get(0)?,
